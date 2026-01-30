@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>LCES Register</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Add banner at the top -->
+    <div class="banner">
+        <div class="banner-content">
+            <img src="/img/LCES.png" alt="LCES Logo" class="logo">
+            <h1 class="banner-title">LCES Confirm code</h1>
+        </div>
+    </div>
+
+    <div>
+        <div>Please insert the code received in your email, make sure to check you spam mail.</div>
+        <br>
+        <form id="confirmationForm">
+            <div class="form-group">
+                <label for="code">Confirmation Code:</label>
+                <input type="text" id="code" required>
+            </div>
+            <button type="submit">Confirm</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('confirmationForm');
+
+        form.addEventListener('submit', async (e) => {
+            event.preventDefault();
+
+              const formData = {
+                code: document.getElementById('code').value,
+            };
+
+            try{
+                const response = await fetch('/api/LCES/confirm/' + formData.code, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                alert('Confirmation Code submitted successfully!');
+             } catch (error) {
+                console.error('Error:', error);
+                alert('Confirmation failed');
+            }
+        });
+
+    </script>
+</body>
+</html>

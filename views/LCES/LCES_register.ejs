@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>LCES Register</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <!-- Add banner at the top -->
+    <div class="banner">
+      <div class="banner-content">
+        <img src="/img/LCES.png" alt="LCES Logo" class="logo" />
+        <h1 class="banner-title">LCES Register</h1>
+      </div>
+    </div>
+
+    <div>
+      <div>Fill in the form below to register an account:</div>
+      </br>
+      <form id="registrationForm" class="registrationForm">
+        <div class="form-group">
+          <label for="firstname">First Name:</label>
+          <input type="text" id="firstname" required />
+        </div>
+        <div class="form-group">
+          <label for="lastname">Last Name:</label>
+          <input type="text" id="lastname" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" required />
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("registrationForm");
+
+      form.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        // Firstname length validation
+        const firstname = document.getElementById("firstname").value.trim();
+        if (firstname.length < 2 || firstname.length > 50) {
+          alert("First name must be between 2 and 50 characters long.");
+          document.getElementById("firstname").focus();
+          return;
+        }
+        // Lastname length validation
+        const lastname = document.getElementById("lastname").value.trim();
+        if (lastname.length < 2 || lastname.length > 50) {
+          alert("Last name must be between 2 and 50 characters long.");
+          document.getElementById("lastname").focus();
+          return;
+        }
+      
+        // Email regex pattern
+        const email = document.getElementById("email").value;
+        const emailPattern = /^\S+@\S+\.\S+$/;
+        if (!emailPattern.test(email)) {
+          console.log("Invalid email:", email);
+          alert("Please enter a valid email address.");
+          document.getElementById("email").focus();
+          return;
+        }
+        
+        // Belgian GSM phone regex: +32, then 4, then 5-9, then 7 digits
+        const phone = document.getElementById("phone").value;
+        const belgianGsmPattern = /^\+324[5-9][0-9]{7}$/;
+        if (!belgianGsmPattern.test(phone)) {
+          console.log("Invalid phone number:", phone);
+          alert("Please enter a valid Belgian GSM number with '+32' prefix (e.g., +32470123456).");
+          document.getElementById("phone").focus();
+          return;
+        }
+
+        // Password validation: 8-64 chars, at least 1 uppercase, 1 lowercase, 1 number, 1 special character
+        const password = document.getElementById("password").value;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,64}$/;
+        if (!passwordPattern.test(password)) {
+          console.log("Invalid password:", password);
+          alert("Password must be 8-64 characters long and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
+          document.getElementById("password").focus();
+          return;
+        }
+
+        const formData = {
+          firstname: document.getElementById("firstname").value,
+          lastname: document.getElementById("lastname").value,
+          email: document.getElementById("email").value,
+          region: "EU",
+          phone: document.getElementById("phone").value,
+          password: document.getElementById("password").value,
+          currency: "LCES",
+        };
+
+        try {
+          const response = await fetch("/api/LCES/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          alert("Registration form is submitted!");
+
+          if (response.ok) {
+            window.location.href = "/LCES/confirm";
+          } else {
+            alert("Registration failed");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Registration failed");
+        }
+      });
+    </script>
+  </body>
+</html>
