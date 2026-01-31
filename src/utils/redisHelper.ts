@@ -5,6 +5,7 @@ export default class RedisHelper {
     short: 10,      // 10 seconds
     long: 60,       // 1 minute
     five_minutes: 300,       // 5 minutes
+    one_hour: 3600,       // 1 hour
     day: 86400      // 24 hours
   };
 

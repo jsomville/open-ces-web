@@ -1,6 +1,6 @@
 import express from "express";
 
-import { registerUser, confirmCode } from "./service";
+import { registerUser, confirmCode, testFunction } from "./service";
 
 const router = express.Router();
 
@@ -43,14 +43,38 @@ router.post("/confirm/:number", async (req, res) => {
 
     const result = await confirmCode(Number(data.number));
     if (result === "error") {
+      console.log("api_route - Error confirming code");
       res.status(500).send("Internal Server Error");
+      return;
+    }
+    else if (result === "not_found") {  
+      console.log("api_route - Confirm code not found");
+      res.status(404).send("Confirm Code Not Found");
       return;
     }
 
     //Send ok response
     res.send("POST LCES confirm api");
   } catch (err) {
-    console.error("Error in LCES confirm api:", err);
+    //console.error("Error in LCES confirm api:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/test", async (req, res) => {
+  try {
+    const data = req.params;
+
+    const result = await testFunction();
+    if (result === "error") {
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+
+    //Send ok response
+    res.send("POST LCES test api");
+  } catch (err) {
+    console.error("Error in LCES test api:", err);
     res.status(500).send("Internal Server Error");
   }
 });

@@ -45,7 +45,12 @@
                     body: JSON.stringify(formData)
                 });
 
-                alert('Confirmation Code submitted successfully!');
+                if (response.ok) {
+                    alert('Confirmation successful!');
+                    window.location.href = '/LCES/login';
+                } else {
+                    alert('Confirmation failed. Please check the code and try again.');
+                }
              } catch (error) {
                 console.error('Error:', error);
                 alert('Confirmation failed');
